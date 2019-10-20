@@ -24,6 +24,7 @@ router.post(
     ).isLength({ min: 6 })
   ],
   async (req, res) => {
+    console.log('Request to create a user acknowledged');
     console.log(req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

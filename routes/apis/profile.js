@@ -134,10 +134,11 @@ router.get('/', async (req, res) => {
 //@desc     Get profile by user ID
 //@access   Public
 router.get('/user/:user_id', async (req, res) => {
+  console.log('API CALLED SUCCESSFULLY. TRYING TO FETCH THE PROFILE OF THE REQUESTED USER')
   try {
     const profile = await Profile.findOne({
       user: req.params.user_id
-    }).populate('user', ['user', 'avatar']);
+    }).populate('user', ['name', 'avatar']);
     if (!profile) {
       return res.status(400).json({ msg: 'Profile not found' });
     }
@@ -241,18 +242,15 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
     const profile = await Profile.findOne({ user: req.user.id });
 
     //Get remove index
-    console.log('exp_id', req.params.exp_id);
-    console.log('profile found', profile);
     const removeIndex = profile.experience.findIndex(item => {
-      console.log('item.id', item.id);
       if (item.id === req.params.exp_id) {
         return true;
       }
     });
 
-    console.log('response index', removeIndex);
-
-    profile.experience.splice(removeIndex, 1);
+    if (removeIndex !== -1) {
+      profile.experience.splice(removeIndex, 1);
+    }
 
     await profile.save();
     res.json(profile);
@@ -332,7 +330,7 @@ router.patch(
 //@route    DELETE api/profile/education/:edu_id
 //@desc     delete education from profile
 //@access   Private
-router.delete('/education/:exp_id', auth, async (req, res) => {
+router.delete('/education/:edu_id', auth, async (req, res) => {
   try {
     const profile = await Profile.findOne({ user: req.user.id });
 
@@ -344,7 +342,11 @@ router.delete('/education/:exp_id', auth, async (req, res) => {
       }
     });
 
-    profile.education.splice(removeIndex, 1);
+    console.log('remove index', removeIndex);
+
+    if (removeIndex !== -1) {
+      profile.education.splice(removeIndex, 1);
+    }
 
     await profile.save();
     res.json(profile);

@@ -146,7 +146,6 @@ router.patch('/unlike/:id', auth, async (req, res) => {
       like => like.user.toString() === req.user.id
     );
 
-    console.log('userIndex', userIndex);
 
     if (userIndex === -1) {
       return res.status(400).json({ msg: 'User has not yet liked the Post' });
@@ -163,7 +162,7 @@ router.patch('/unlike/:id', auth, async (req, res) => {
   }
 });
 
-//@route    POST api/posts/comments/:id
+//@route    POST api/posts/comment/:id
 //@desc     Comment on a post
 //@access   Private
 router.post(
@@ -206,10 +205,10 @@ router.post(
   }
 );
 
-//@route    DELETE api/posts/comments/:id/:comment_id
+//@route    DELETE api/posts/comment/:id/:comment_id
 //@desc     Delete comment
 //@access   Private
-router.delete('/comments/:id/:comment_id', auth, async (req, res) => {
+router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
 
